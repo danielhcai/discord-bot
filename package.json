@@ -1,0 +1,19 @@
+{
+  "name": "Daniel's Bot",
+  "version": "1.0.0",
+  "description": "Discord Bot",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.5.1",
+    "enmap": "^5.1.2",
+    "enmap-level": "^2.1.0",
+    "jimp": "^0.6.8",
+    "js-htmlencode": "^0.3.0",
+    "snekfetch": "^4.0.4"
+  }
+}
