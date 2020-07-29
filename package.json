@@ -12,6 +12,6 @@
     "discord.js": "^12.2.0",
     "jimp": "^0.14.0",
     "js-htmlencode": "^0.3.0",
-    "snekfetch": "^4.0.4"
+    "node-fetch": "^2.6.0"
   }
 }

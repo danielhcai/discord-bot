@@ -2,7 +2,7 @@
 const Discord = require("discord.js");
 
 // Create an instance of a Discord client
-const client = new Discord.Client({disableEveryone: true});
+const client = new Discord.Client();
 
 // The token of the bot
 // The prefix of the bot
@@ -64,10 +64,10 @@ client.on("message", message => {
 	//console.log(message.content);
 	if(message.content.indexOf("<@406315185507139584>")===0) return message.channel.send(`Use ${prefix} to talk to me!`);
 
-	//Ignore all messages without the prefix
+	// Ignore all messages without the prefix
 	if(message.content.indexOf(prefix)!==0) return;
 
-	//splits the message into a command and an array of args
+	// Splits the message into a command and an array of args
 	const args = message.content.slice(prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
 

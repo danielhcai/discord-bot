@@ -1,5 +1,5 @@
 const Discord = module.require("discord.js");
-const snekfetch = require("snekfetch");
+const snekfetch = require("node-fetch");
 
 module.exports.run = async (client, message, args) => {
 	var guildSettings;
