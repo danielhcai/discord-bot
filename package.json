@@ -1,6 +1,6 @@
 {
   "name": "discord-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Simple bot that runs on Discord.",
   "main": "bot.js",
   "scripts": {
@@ -9,10 +9,8 @@
   "author": "Daniel",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.5.1",
-    "enmap": "^5.1.2",
-    "enmap-level": "^2.1.0",
-    "jimp": "^0.6.8",
+    "discord.js": "^12.2.0",
+    "jimp": "^0.14.0",
     "js-htmlencode": "^0.3.0",
     "snekfetch": "^4.0.4"
   }

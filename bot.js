@@ -11,31 +11,9 @@ client.config = require("./config.json");
 //Enables reading from other files
 const fs = require("fs");
 
-// Import Enmap
-const Enmap = require("enmap");
-const EnmapLevel = require("enmap-level");
-
-client.kiss = require("./url/kiss.json");
-client.slap = require("./url/slap.json");
-
 // Creates a Collection for commands
 client.commands = new Discord.Collection();
 
-// Creates a new Enmap
-client.provider = new EnmapLevel({name: "settings"});
-client.settings = new Enmap({provider: client.provider});
-
-client.shop = new EnmapLevel({name: "currency"});
-client.currency = new Enmap({provider: client.shop});
-
-// Defualt server settings for the bot
-client.defaultSettings = {
-	prefix: "-",
-}
-
-client.defaultShop = {
-	coins: 0,
-}
 
 // Loads all the commands
 fs.readdir("./cmds/", (err, files) => {
@@ -53,38 +31,6 @@ fs.readdir("./cmds/", (err, files) => {
 	});
 });
 
-// Makes sure all servers have server settings
-function checkServer(guild, key, map){
-	if(!client.settings.has(key)){
-		client.settings.set(key,client.defaultSettings);
-		console.log("add 2")
-	}
-	var guildSettings = client.settings.get(key);
-
-	if(!guildSettings.prefix) guildSettings.prefix = "-";
-	guild.members.forEach(addMember);
-
-}
-
-//Checks off a member has settings
-function checkMember(member){
-	if(!client.currency.has(member.id)) client.currency.set(member.id, client.defaultShop);
-
-	var shop = client.currency.get(member.id)
-
-	if(!shop.coins) shop.coins = 0; 
-}
-
-//Adds a member to the settings
-//ERROR
-function addMember(member, key, map){
-	if(!client.currency.has(key)) client.currency.set(key, client.defaultShop);
-
-	var shop = client.currency.get(key)
-
-	if(!shop.coins) shop.coins = 0; 
-}
-
 // Triggers when the bot is turned on
 client.on("ready", async () => {
 	// Logs that the bot is ready
@@ -92,20 +38,12 @@ client.on("ready", async () => {
 	
 	//Sets the game to -help
 	client.user.setActivity(`-help`);
-
-	// Checks server settings
-	client.guilds.forEach(checkServer);
 });
 
   // Triggers when the bot joins a guild
 client.on("guildCreate", guild => {
 	//Logs the bot has joined a guild
 	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-	
-	// Adds server settings whenever the bot joins a server
-	client.settings.set(guild.id, client.defaultSettings);
-	console.log("add 1")
-	guild.members.forEach(addMember);
 });
 
 // Triggers when the bot is removed from a guild.
@@ -114,23 +52,15 @@ client.on("guildDelete", guild => {
 	console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
-client.on("guildMemberAdd", member => {
-	checkMember(member);
-});
 
 // Triggers whenever a message is sent
-client.on("message", async message => {
+client.on("message", message => {
 
 	// Ignores all bot messages
 	if(message.author.bot) return;
 	
 	var prefix = "-";
 
-	//Imports server settings
-	if(message.channel.type == "text"){
-		var guildSettings = client.settings.get(message.guild.id);
-		prefix = guildSettings.prefix;
-	}
 	//console.log(message.content);
 	if(message.content.indexOf("<@406315185507139584>")===0) return message.channel.send(`Use ${prefix} to talk to me!`);
 
@@ -144,11 +74,6 @@ client.on("message", async message => {
     // Logs user,commands, and args
 	console.log(`Username: ${message.author.username} ID: ${message.author.id} Command: ${command} Args: ${args.join(" ")}`)
 
-	if(command === "reset"){
-		shop = client.currency.get(message.author.id);
-		shop.coins = 10;
-		client.currency.set(message.author.id,shop);
-	}
 	// Looks for the command within client.commands
 	let cmd = client.commands.get(command);
 	if(cmd) cmd.run(client, message, args);
