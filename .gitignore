@@ -6,5 +6,8 @@
 *.json~
 *.swp
 
-#Ignore Node Modules
+# Ignore Node Modules
 node_modules/
+
+# Ignore Config File
+config.json
