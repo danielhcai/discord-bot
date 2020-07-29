@@ -1,7 +1,7 @@
 {
-  "name": "Daniel's Bot",
+  "name": "discord-bot",
   "version": "1.0.0",
-  "description": "Discord Bot",
+  "description": "Simple bot that runs on Discord.",
   "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

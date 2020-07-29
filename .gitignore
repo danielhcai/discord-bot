@@ -1,0 +1,10 @@
+# Ignore Vim Files
+*.un~
+*.html~
+*.css~
+*.js~
+*.json~
+*.swp
+
+#Ignore Node Modules
+node_modules/
