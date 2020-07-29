@@ -1,15 +1,14 @@
+//Enables reading from other files
+const fs = require("fs");
+
 // Import the discord.js
 const Discord = require("discord.js");
 
 // Create an instance of a Discord client
 const client = new Discord.Client();
 
-// The token of the bot
-// The prefix of the bot
+// Contains bot token and api keys
 client.config = require("./config.json");
-
-//Enables reading from other files
-const fs = require("fs");
 
 // Creates a Collection for commands
 client.commands = new Discord.Collection();
@@ -17,66 +16,66 @@ client.commands = new Discord.Collection();
 
 // Loads all the commands
 fs.readdir("./cmds/", (err, files) => {
-	if(err) console.error(err);
+	if(err) {
+        console.error(err);
+    }
 
-	let jsfiles = files.filter(f => f.split(".").pop() === "js");
-	if(jsfiles.length <= 0){
+	let jsFiles = files.filter(f => f.split(".").pop() === "js");
+
+	if(jsFiles.length <= 0) {
 		console.log("No Commands to Load.");
 		return;
 	}
+    else {
+        console.log("Loaded Commands:", jsFiles);
+    }
 
-	jsfiles.forEach((f, i) => {
-		let props = require(`./cmds/${f}`)
-		client.commands.set(props.help.name, props);
-	});
+    jsFiles.forEach(fileName => {
+        let cmd = require(`./cmds/${fileName}`)
+        client.commands.set(cmd.help.name, cmd);
+    });
 });
 
 // Triggers when the bot is turned on
-client.on("ready", async () => {
-	// Logs that the bot is ready
-	console.log(`${client.user.username} has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
-	
-	//Sets the game to -help
-	client.user.setActivity(`-help`);
+client.on("ready", () => {
+    console.log(`${client.user.username} has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`); 
+
+    client.user.setActivity(`-help`);
 });
 
-  // Triggers when the bot joins a guild
+// Triggers when the bot joins a guild
 client.on("guildCreate", guild => {
-	//Logs the bot has joined a guild
-	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+    console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 });
 
 // Triggers when the bot is removed from a guild.
 client.on("guildDelete", guild => {
-	//Logs that the bot has been removed from a guild
-	console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+    console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
 });
 
 
 // Triggers whenever a message is sent
 client.on("message", message => {
+    if(message.author.bot) return;
 
-	// Ignores all bot messages
-	if(message.author.bot) return;
-	
-	var prefix = "-";
+    let prefix = "-";
 
-	//console.log(message.content);
-	if(message.content.indexOf("<@406315185507139584>")===0) return message.channel.send(`Use ${prefix} to talk to me!`);
+    if(message.content.indexOf("<@!406315185507139584>") === 0) return message.channel.send(`Use "${prefix}" to talk to me!`);
 
-	// Ignore all messages without the prefix
-	if(message.content.indexOf(prefix)!==0) return;
+    if(message.content.indexOf(prefix) !== 0) return;
 
-	// Splits the message into a command and an array of args
-	const args = message.content.slice(prefix.length).trim().split(/ +/g);
-	const command = args.shift().toLowerCase();
+    // Splits the message into a command and an array of args
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    const command = args.shift().toLowerCase();
 
     // Logs user,commands, and args
-	console.log(`Username: ${message.author.username} ID: ${message.author.id} Command: ${command} Args: ${args.join(" ")}`)
+    console.log(`Username: ${message.author.username} ID: ${message.author.id} Command: ${command} Args: ${args.join(" ")}`)
 
-	// Looks for the command within client.commands
-	let cmd = client.commands.get(command);
-	if(cmd) cmd.run(client, message, args);
+    // Looks for the command within client.commands
+    let cmd = client.commands.get(command);
+    if(cmd) {
+        cmd.run(client, message, args);
+    }
 });
 
 
