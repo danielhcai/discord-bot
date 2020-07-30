@@ -14,7 +14,7 @@ module.exports.run = async (client, message, args) => {
     console.log(client.commands.keyArray());
 	let embed = new Discord.MessageEmbed()
    		.addField("Commands:", commandString, true)
-   		.setColor("#50e080");
+   		.setColor("#8076AA");
 
     return message.author.send(embed);
 }

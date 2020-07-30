@@ -18,11 +18,11 @@ module.exports.run = async (client, message, args) => {
     else var member = mention[0];
   }
 
-  let embed = new Discord.RichEmbed()
+  let embed = new Discord.MessageEmbed()
     .setAuthor(member.username)
     .addField("Username", member.tag)
     .addField("ID", member.id)
-    .setThumbnail(member.displayAvatarURL)
+    .setThumbnail(member.displayAvatarURL())
     .setColor("#8076AA");
 
   message.channel.send(embed);

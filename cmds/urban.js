@@ -1,54 +1,61 @@
 const Discord = module.require("discord.js");
-const snekfetch = require("node-fetch");
+const fetch = require("node-fetch");
 
 module.exports.run = async (client, message, args) => {
-	var guildSettings;
-	if(message.channel.text == "dm") guildSettings = client.defaultSettings;
-	if(message.channel.type == "text") guildSettings = client.settings.get(message.guild.id);
-  	
-	if(!args) return message.channel.send(`${guildSettings.prefix}wiki (search)`);
+    if(args.length == 0) {
+        return message.channel.send("-wiki (search)");
+    }
 
-	var urbanURL = "http://api.urbandictionary.com/v0/define?term=";
-	var search = args.join(" ");
+    var urbanURL = "http://api.urbandictionary.com/v0/define?term=";
+    var search = args.join(" ");
 
-	var url = urbanURL+search;
+    var url = urbanURL+search;
 
-	snekfetch.get(url).then(r =>{
+    fetch(url)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+            if(json.error){
+                return message.channel.send(new Discord.MessageEmbed()
+                    .setTitle("An Error has Occured")
+                    .setColor("#8076AA"));
+            }
 
-		if(!r) return message.channel.send(new Discord.RichEmbed()
-			.setTitle("Invalid Search")
-			.setColor("#50e080"));
+            let definitions = json.list;
+            let length = definitions.length;
+            if(length == 0) {
+                return message.channel.send(new Discord.MessageEmbed()
+                    .setTitle("Invalid Search")
+                    .setColor("#8076AA"));
+            }
 
-		var result = r.body.list;
+            let i = 0;
+            let found;
+            while(i < length) {
+                if(definitions[i].definition.length < 750) {
+                    found = definitions[i];
+                    i = length;
+                }
+                i++;
+            }
 
-		var found;
-		var i = 0;
-		while(i<result.length){
-			if(result[i].definition.length<750){
-				found = result[i];
-				i = result.length;
-			}
-			if(i==result.length-1) return message.channel.send("No Results Found");
-			i++;
-		}
-		
+            if(!found){
+                return message.channel.send(new Discord.MessageEmbed()
+                    .setTitle("No Results Found")
+                    .setColor("#8076AA"));
+            }
 
-		//console.log(r);
-		//console.log(body)
 
-		
+            let embed = new Discord.MessageEmbed()
+                .setDescription(`[**${found.word}**](${found.permalink})\nBy: ${found.author}`)
+                .addField("Defintion", found.definition)
+                .addField("Example", found.example)
+                .setColor("#8076AA");
 
-		let embed = new Discord.RichEmbed()
-			.setDescription(`[**${found.word}**](${found.permalink})\nBy: ${found.author}`)
-			.addField("Defintion", found.definition)
-			.addField("Example", found.example)
-			.setColor("#50e080");
-
-		message.channel.send(embed);
-	});
-
+            message.channel.send(embed);
+        });
 }
 
 module.exports.help = {
-	name: "urban"
+    name: "urban"
 }
