@@ -13,6 +13,5 @@ bot.js holds the main code for the program and the /cmds/ folder holds all the c
 * Update nytimes
 * Update picture
 * Update trivia
-* Update urban
 * Update wiki
 
