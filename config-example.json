@@ -1,0 +1,5 @@
+{
+    "token": "bot token",
+    "define": "wordnik api key",
+    "nytimes": "nytimes api key"
+}
