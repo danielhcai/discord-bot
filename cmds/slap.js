@@ -1,25 +1,32 @@
 const Discord = module.require("discord.js");
 
 module.exports.run = async (client, message, args) => {
-	// Slap someone
-  var guildSettings;
-	if(message.channel.type == "text") guildSettings = client.settings.get(message.guild.id);
-  else guildSettings = client.defaultSettings;
-  
-	var user = message.mentions.users.first();
-  if(message.channel.type != "dm")var mention = message.mentions.members.first();
+    let mentions = message.mentions.users;
+    if(mentions.size > 1) {
+        return message.channel.send("You can only slap one person at a time!");
+    }
 
-  	if(!user) return message.channel.send(`Usage: ${guildSettings.prefix}slap @user`)
+    let mentionedUser = mentions.first();
+  	if(!mentionedUser) {
+        return message.channel.send("Usage: -slap @user")
+    }
+  	if(message.author === mentionedUser) {
+        return message.channel.send("You can't slap yourself!");
+    }
 
-  	if(message.author === user) return message.channel.send("Don't hurt yourself!");
+    let give = message.author.username;
+    let receive = mentionedUser.username;
+    if(message.channel.type != "dm") {
+        give = message.member.displayName;
+        receive = message.mentions.members.first().displayName;
+    }
+	var i = Math.floor(Math.random()*client.slap.length);
 
-  	if(client.user.id === user.id) return message.channel.send("You can't slap me!");
+	console.log(client.slap.length)
 
-  	var i = Math.floor(Math.random()*client.kiss.length);
-
-  	let embed = new Discord.RichEmbed()
-  		.setDescription(`**${message.member.displayName}** slapped **${mention.displayName}**`)
-  		.setImage(client.slap[i].url)
+  	let embed = new Discord.MessageEmbed()
+  		.setDescription(`**${give}** slaped **${receive}**`)
+    	.setImage(client.slap[i].url)
     	.setColor("#8076AA");
 
     message.channel.send(embed);

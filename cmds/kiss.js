@@ -1,26 +1,31 @@
 const Discord = module.require("discord.js");
 
 module.exports.run = async (client, message, args) => {
-  // Kiss someone
-  var guildSettings;
-  if(message.channel.type == "text") guildSettings = client.settings.get(message.guild.id);
-  else guildSettings = client.defaultSettings;
+    let mentions = message.mentions.users;
+    if(mentions.size > 1) {
+        return message.channel.send("You can only kiss one person at a time!");
+    }
 
-  var user = message.mentions.users.first();
-	if(message.channel.type != "dm")var mention = message.mentions.members.first();
+    let mentionedUser = mentions.first();
+  	if(!mentionedUser) {
+        return message.channel.send("Usage: -kiss @user")
+    }
+  	if(message.author === mentionedUser) {
+        return message.channel.send("You can't kiss yourself!");
+    }
 
-  	if(!user) return message.channel.send(`Usage: ${guildSettings.prefix}kiss @user`)
-
-  	if(message.author === user) return message.channel.send("You can't kiss yourself.");
-
-  	if(client.user.id === user.id) return message.channel.send("么么哒!");
-
+    let give = message.author.username;
+    let receive = mentionedUser.username;
+    if(message.channel.type != "dm") {
+        give = message.member.displayName;
+        receive = message.mentions.members.first().displayName;
+    }
 	var i = Math.floor(Math.random()*client.kiss.length);
 
 	console.log(client.kiss.length)
 
-  	let embed = new Discord.RichEmbed()
-  		.setDescription(`**${message.member.displayName}** kissed **${mention.displayName}**`)
+  	let embed = new Discord.MessageEmbed()
+  		.setDescription(`**${give}** kissed **${receive}**`)
     	.setImage(client.kiss[i].url)
     	.setColor("#8076AA");
 
