@@ -1,46 +1,39 @@
 const Discord = module.require("discord.js");
-const snekfetch = require("node-fetch");
+const fetch = require("node-fetch");
 const htmlEncode = require("js-htmlencode");
 
 module.exports.run = async (client, message, args) => {
-	/*
-	var guildSettings;
-	if(message.channel.type == "text") guildSettings = client.settings.get(message.guild.id);
-  	else guildSettings = client.defaultSettings;
 
-	if(!args) return message.channel.send(`${guildSettings.prefix}wiki (search)`);
+    if(!args) {
+        return message.channel.send(`-wiki (search)`);
+    }
 
-	var url = `http://api.wordnik.com/v4/word.json/${args[0]}/definitios?limit=5&includeRelated=true&useCanonical=false&includeTags=false&api_key=${client.config.define}`;
+    let url = `https://api.wordnik.com/v4/word.json/${args[0]}/definitions?limit=5&includeRelated=false&useCanonical=true&includeTags=false&api_key=${client.config.wordnik}`;
 
-	snekfetch.get(url).then(async r =>{
+    fetch(url)
+        .then(res => res.json())
+        .then(json =>{
+            if(json.error) {
+                return message.channel.send(new Discord.MessageEmbed()
+                    .setTitle("Invalid Search")
+                    .setColor("#8076AA"));
+            }
 
-		if(!args[0]) return message.channel.send(new Discord.RichEmbed()
-			.setTitle("Specify a word!")
-			.setColor("#8076AA"));
+            let embed = new Discord.MessageEmbed()
+                .setTitle(`Defintions for: ${args[0]}`);
 
-		definitions = JSON.parse(r.text);
+            let numDefinitions = json.length;
 
-		if(!definitions[0]) return message.channel.send(new Discord.RichEmbed()
-			.setTitle("Invalid Search")
-			.setColor("#8076AA"));
-		else{
-			var def = "";
-			var length = definitions.length;
+            for(let i = 0; i < numDefinitions; i++) {
+                let definition = json[i];
+                embed.addField(`${i+1}. (${definition.partOfSpeech})`, definition.text);
+            }
 
-			for(i=0;i<length;i++){
-				def = def.concat(`**${1+i})** ${definitions[i].partOfSpeech} **-** ${definitions[i].text}\n`);
-			}
-
-			return message.channel.send(new Discord.RichEmbed()
-			.setTitle(`**Definitions for "${args[0]}"**`)
-			.setDescription(def)
-			.setColor("#8076AA"));
-		}
-	});
-	*/
-
+            console.log(json);
+            message.channel.send(embed);
+        });
 }
 
 module.exports.help = {
-	name: "define"
+    name: "define"
 }

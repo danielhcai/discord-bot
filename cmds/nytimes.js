@@ -51,7 +51,7 @@ module.exports.run = async (client, message, args) => {
 
             var answerFilter = msg => choose.includes(msg.content.split(/ +/g).shift().toLowerCase());
 
-            message.channel.awaitMessages(answerFilter,{maxMatches:1, time:30000})
+            message.channel.awaitMessages(answerFilter,{max:1, time:30000})
                 .then(collected => {
                     //console.log(collected);
                     answer = collected.first().content.split(/ +/g).shift().toLowerCase();
