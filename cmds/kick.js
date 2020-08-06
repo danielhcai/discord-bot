@@ -1,24 +1,29 @@
 const Discord = module.require("discord.js");
 
 module.exports.run = async (client, message, args) => {
-	// Bans a user if they have permission
-	var guildSettings;
-	if(message.channel.type == "text") guildSettings = client.settings.get(message.guild.id);
-  	else guildSettings = client.defaultSettings;
-
+	// Kicks a user if they have permission
   	if(message.channel.type == "dm") return;
   	
-	var mentionMember = message.mentions.members.first();
+	let mentionMember = message.mentions.members.first();
+    let author = message.member;
+
+	if(!mentionMember) {
+        return message.channel.send("Usage: -kick @user");
+    }
+
+	if(!author.hasPermission("KICK_MEMBERS")) {
+        return message.channel.send("You do not have permission to kick.");
+    }
+
+	if(mentionMember.user.id === message.guild.ownerID || author.roles.highest.comparePositionTo(mentionMember.roles.highest) > 0) {
+        return message.channel.send(`You do not have permission to kick ${mentionMember.displayName}.`);
+    }
+
+	if(!mentionMember.kickable) {
+        return message.channel.send(`I do not have permission to kick ${mentionMember.displayName}.`);
+    }
 	
-	if(!mentionMember) return message.channel.send(`Usage: ${guildSettings.prefix}kick @user`);
-
-	if(!message.member.permissions.has("KICK_MEMBERS", true)) return message.channel.send("You do not have permission to kick.");
-
-	if(message.member.highestRole.calculatedPosition < mentionMember.highestRole.calculatedPosition) return message.channel.send(`You do not have permission to kick ${mentionMember.displayName}.`);
-
-	if(!mentionMember.kickable) return message.channel.send(`I do not have permission to kick ${mentionMember.displayName}.`);
-
-	message.channel.send(`You have kicked ${mentionMember.displayName}`)
+    message.channel.send(`You have kicked ${mentionMember.displayName}`);
 	mentionMember.kick();
 
 }
