@@ -1,7 +1,7 @@
 # Discord Bot
 
 ## Overview
-A basic basic bot.
+A basic basic discord bot. All commands can be found in the cmds folder and the code for the bot can be found in the bot.js file.
 
 ## Usage
 1. Set up a discord bot in the discord developer portal (https://discord.com/developers).
@@ -10,6 +10,6 @@ A basic basic bot.
 4. Run the command "node bot.js" from the command line
 
 ## Other
-- Running the bot requires node and the dependencies in the package.json file.
+- Running the bot requires Node and the dependencies in the package.json file.
 - The nytimes and define commands will not work without an API key for New York Times and Worknik. If you do not have an API key, simply remove the command from the cmds folder and those lines on the config file. However, both are free to sign up for.
 
