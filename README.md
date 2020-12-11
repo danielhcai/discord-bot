@@ -1,9 +1,15 @@
 # Discord Bot
 
-This repository hosts the code for my personal discord bot.
+## Overview
+A basic basic bot.
 
 ## Usage
-bot.js holds the main code for the program and the /cmds/ folder holds all the commands the bot will respond to
+1. Set up a discord bot in the discord developer portal (https://discord.com/developers).
+2. Create an application and add a bot.
+3. Find the token and add into a config.json file. An example can be found in config-example.json.
+4. Run the command "node bot.js" from the command line
 
-## TODO
-* Add personal settings
+## Other
+- Running the bot requires node and the dependencies in the package.json file.
+- The nytimes and define commands will not work without an API key for New York Times and Worknik. If you do not have an API key, simply remove the command from the cmds folder and those lines on the config file. However, both are free to sign up for.
+

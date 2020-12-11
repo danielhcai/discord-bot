@@ -13,9 +13,6 @@ client.config = require("./config.json");
 // Creates a Collection for commands
 client.commands = new Discord.Collection();
 
-client.kiss = require("./url/kiss.json");
-client.slap = require("./url/slap.json");
-
 // Loads all the commands
 fs.readdir("./cmds/", (err, files) => {
 	if(err) {
