@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "discord-bot",
   "version": "2.0.0",
@@ -14,3 +15,21 @@
     "node-fetch": "^2.6.0"
   }
 }
+=======
+{
+  "name": "discord-bot",
+  "version": "2.0.0",
+  "description": "Simple bot that runs on Discord.",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "js-htmlencode": "^0.3.0",
+    "node-fetch": "^2.6.1"
+  }
+}
+>>>>>>> 578674f0dc93d08c033b3cd0b8786f9c77ce9e8a
